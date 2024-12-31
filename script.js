@@ -3,7 +3,6 @@ console.log("JavaScript is linked correctly!");
 // Select the form element
 const form = document.getElementById("resume-form");
 
-// Check if the form exists
 if (form) {
     console.log("Form element found:", form);
 
@@ -28,7 +27,15 @@ if (form) {
         // Get the selected template
         const template = document.getElementById("template").value;
         console.log("Selected Template:", template);
-    });
-} else {
-    console.error("Form element not found!");
-}
+
+        // Validate inputs
+        if (!resumeFile || !jobDescription || !template) {
+            alert("Please fill out all fields!");
+            return;
+        }
+
+        // Display data on the page
+        const previewDiv = document.getElementById("preview");
+        previewDiv.innerHTML = `
+            <h3>Form Data Preview:</h3>
+            <p><strong>Upload
