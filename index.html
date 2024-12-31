@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Builder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the AI Resume Builder</h1>
+    </header>
+    <main>
+        <form id="resume-form">
+            <label for="resume-upload">Upload Resume (DOCX or PDF):</label>
+            <input type="file" id="resume-upload" name="resume" accept=".docx, .pdf">
+            <br><br>
+
+            <label for="job-desc">Paste Job Description:</label>
+            <textarea id="job-desc" name="job-description" rows="5"></textarea>
+            <br><br>
+
+            <label for="template">Choose a Template:</label>
+            <select id="template" name="template">
+                <option value="template1">Professional</option>
+                <option value="template2">Creative</option>
+            </select>
+            <br><br>
+
+            <button type="submit">Generate Resume</button>
+        </form>
+
+        <div id="preview">
+            <!-- Preview of the generated resume will appear here -->
+        </div>
+    </main>
+</body>
+</html>
