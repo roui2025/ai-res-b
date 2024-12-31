@@ -38,4 +38,28 @@ if (form) {
         const previewDiv = document.getElementById("preview");
         previewDiv.innerHTML = `
             <h3>Form Data Preview:</h3>
-            <p><strong>Upload
+            <p><strong>Uploaded File:</strong> ${resumeFile ? resumeFile.name : "No file uploaded"}</p>
+            <p><strong>Job Description:</strong> ${jobDescription}</p>
+            <p><strong>Selected Template:</strong> ${template}</p>
+        `;
+
+        // Simulate AI processing or send data to the back end
+        fetch("https://your-backend-url.com/process", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ jobDescription, template })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("AI Response:", data);
+            // Display AI response on the page
+            previewDiv.innerHTML += `<p><strong>AI Suggestions:</strong> ${data.suggestions}</p>`;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            previewDiv.innerHTML += `<p><strong>Error:</strong> Unable to retrieve AI suggestions.</p>`;
+        });
+    });
+} else {
+    console.error("Form element not found!");
+}
