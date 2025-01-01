@@ -9,22 +9,21 @@ document.addEventListener("DOMContentLoaded", () => {
             event.preventDefault(); // Prevent the form from refreshing the page
             console.log("Form submission intercepted!");
 
-            // Collecting form data
+            // Collecting form data from the form inputs dynamically
+            const name = document.querySelector("#name").value || "Name Not Provided";
+            const address = document.querySelector("#address").value || "Address Not Provided";
+            const phone = document.querySelector("#phone").value || "Phone Not Provided";
+            const email = document.querySelector("#email").value || "Email Not Provided";
+            const areasOfExpertise = document.querySelector("#expertise").value || "No expertise listed.";
+            const experience = JSON.parse(document.querySelector("#experience").value || "[]");
+
             const formData = {
-                name: document.querySelector("#name").value || "John Doe",
-                address: document.querySelector("#address").value || "123 Main St",
-                phone: document.querySelector("#phone").value || "+1 555-123-4567",
-                email: document.querySelector("#email").value || "john.doe@example.com",
-                areasOfExpertise: document.querySelector("#expertise").value || "Web Development, APIs",
-                experience: [
-                    {
-                        title: "Software Engineer",
-                        company: "TechCorp",
-                        location: "San Francisco, CA",
-                        dates: "2020–Present",
-                        details: ["Developed scalable APIs", "Improved system performance"],
-                    },
-                ],
+                name,
+                address,
+                phone,
+                email,
+                areasOfExpertise,
+                experience,
             };
 
             console.log("Form Data Preview:", formData);
