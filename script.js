@@ -1,86 +1,62 @@
-// Wait for the DOM to fully load before running scripts
 document.addEventListener("DOMContentLoaded", () => {
     console.log("JavaScript is linked correctly!");
 
-    // Get the form element
     const form = document.querySelector("#resume-form");
+    if (form) {
+        console.log("Form element found:", form);
 
-    if (!form) {
-        console.error("Form element not found!");
-        return;
-    }
+        form.addEventListener("submit", (event) => {
+            event.preventDefault(); // Prevent the form from refreshing the page
+            console.log("Form submission intercepted!");
 
-    console.log("Form element found:", form);
+            // Collecting form data
+            const formData = {
+                name: document.querySelector("#name").value || "John Doe",
+                address: document.querySelector("#address").value || "123 Main St",
+                phone: document.querySelector("#phone").value || "+1 555-123-4567",
+                email: document.querySelector("#email").value || "john.doe@example.com",
+                areasOfExpertise: document.querySelector("#expertise").value || "Web Development, APIs",
+                experience: [
+                    {
+                        title: "Software Engineer",
+                        company: "TechCorp",
+                        location: "San Francisco, CA",
+                        dates: "2020–Present",
+                        details: ["Developed scalable APIs", "Improved system performance"],
+                    },
+                ],
+            };
 
-    // Handle form submission
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault(); // Prevent the default form submission behavior
-        console.log("Form submission intercepted!");
+            console.log("Form Data Preview:", formData);
 
-        const fileInput = document.querySelector("#resume-upload");
-        const jobDescriptionInput = document.querySelector("#job-desc");
-        const templateSelect = document.querySelector("#template");
-
-        // Get form data
-        const resumeFile = fileInput.files[0];
-        const jobDescription = jobDescriptionInput.value;
-        const template = templateSelect.value;
-
-        console.log("Uploaded file:", resumeFile);
-        console.log("Job Description:", jobDescription);
-        console.log("Selected Template:", template);
-
-        if (!jobDescription || !template) {
-            alert("Please provide all required inputs.");
-            return;
-        }
-
-        // Prepare JSON payload
-        const payload = {
-            name: "Sample Name", // Replace this with actual data input fields if necessary
-            address: "Sample Address",
-            phone: "Sample Phone",
-            email: "sample@example.com",
-            areasOfExpertise: "Sample Areas of Expertise",
-            experience: [
-                {
-                    title: "Sample Title",
-                    company: "Sample Company",
-                    location: "Sample Location",
-                    dates: "Sample Dates",
-                    details: ["Sample Detail 1", "Sample Detail 2"]
-                }
-            ]
-        };
-
-        try {
-            // Make a POST request to the backend
-            const response = await fetch("http://127.0.0.1:5000/generate-resume", {
+            // Send POST request to backend
+            fetch("https://ai-res-b.onrender.com/generate-resume", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                throw new Error(`Server responded with status: ${response.status}`);
-            }
-
-            // Handle the response (PDF download)
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.style.display = "none";
-            a.href = url;
-            a.download = "resume.pdf";
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            console.log("Resume downloaded successfully.");
-        } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred while generating the resume. Please try again.");
-        }
-    });
+                body: JSON.stringify(formData),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok " + response.statusText);
+                    }
+                    return response.blob();
+                })
+                .then((blob) => {
+                    // Create download link
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.style.display = "none";
+                    a.href = url;
+                    a.download = "resume.pdf";
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch((error) => console.error("Error:", error));
+        });
+    } else {
+        console.error("Form not found on the page!");
+    }
 });
