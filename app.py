@@ -1,4 +1,4 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, make_response
 from flask_cors import CORS  # Import CORS
 from weasyprint import HTML
 from io import BytesIO
@@ -6,8 +6,7 @@ import logging
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://roui2025.github.io"}})
-
+CORS(app)  # Enable CORS for all routes
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -18,6 +17,19 @@ def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return response
+
+@app.route("/generate-resume", methods=['OPTIONS'])
+def handle_options():
+    """Handle preflight CORS OPTIONS requests."""
+    logging.info("Received OPTIONS request for /generate-resume")
+    response = app.make_default_options_response()
+    headers = response.headers
+
+    # Set the CORS headers explicitly
+    headers["Access-Control-Allow-Origin"] = "*"
+    headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+    headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     return response
 
 @app.route("/")
