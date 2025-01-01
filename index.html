@@ -3,39 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Resume Builder</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Test Front-End</title>
 </head>
 <body>
-    <header>
-        <h1>Welcome to the AI Resume Builder</h1>
-    </header>
-    <main>
-        <form id="resume-form">
-            <label for="resume-upload">Upload Resume (DOCX or PDF):</label>
-            <input type="file" id="resume-upload" name="resume" accept=".docx, .pdf">
-            <br><br>
+    <h1>Resume Generator Test</h1>
+    <form id="resume-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
 
-            <label for="job-desc">Paste Job Description:</label>
-            <textarea id="job-desc" name="job-description" rows="5"></textarea>
-            <br><br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address"><br><br>
 
-            <label for="template">Choose a Template:</label>
-            <select id="template" name="template">
-                <option value="template1">Professional</option>
-                <option value="template2">Creative</option>
-            </select>
-            <br><br>
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone"><br><br>
 
-            <button type="submit">Generate Resume</button>
-        </form>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
 
-        <div id="preview">
-            <!-- Preview of the generated resume will appear here -->
-        </div>
-    </main>
-    
-    <!-- Link to your JavaScript file -->
-    <script src="script.js"></script>
+        <label for="areasOfExpertise">Areas of Expertise:</label>
+        <textarea id="areasOfExpertise" name="areasOfExpertise"></textarea><br><br>
+
+        <label for="experience">Experience (JSON):</label>
+        <textarea id="experience" name="experience" placeholder='[{"title":"Developer","company":"Tech Co","details":["Built software"]}]'></textarea><br><br>
+
+        <button type="button" onclick="submitForm()">Generate Resume</button>
+    </form>
+
+    <script>
+        function submitForm() {
+            const formData = {
+                name: document.getElementById('name').value,
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                areasOfExpertise: document.getElementById('areasOfExpertise').value,
+                experience: JSON.parse(document.getElementById('experience').value || '[]')
+            };
+
+            fetch('http://127.0.0.1:5000/generate-resume', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'resume.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                alert('Your resume has been downloaded!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to generate resume.');
+            });
+        }
+    </script>
 </body>
 </html>
