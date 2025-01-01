@@ -1,0 +1,8 @@
+{
+    "python.pythonPath": "./venv/bin/python", // Adjust path as needed
+    "python.analysis.diagnosticSeverityOverrides": {
+        "unresolved-import": "none"
+    }
+}
+{
+}
