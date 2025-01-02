@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*", // Adding CORS-related headers
                 },
                 body: JSON.stringify(formData),
             })
